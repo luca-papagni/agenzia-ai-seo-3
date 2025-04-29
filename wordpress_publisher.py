@@ -2,23 +2,26 @@ import requests
 
 def upload_image_to_wordpress(image_url, wordpress_url, wordpress_user, wordpress_password):
     try:
-        image_data = requests.get(image_url).content
+        image_response = requests.get(image_url)
+        image_response.raise_for_status()
+        
         filename = "immagine_articolo.jpg"
         headers = {
-            'Content-Disposition': f'attachment; filename={filename}'
+            'Content-Disposition': f'attachment; filename={filename}',
+            'Content-Type': 'image/jpeg'
         }
 
-        # ✅ Rimuove eventuale slash finale da wordpress_url
         media_url = wordpress_url.rstrip("/") + "/wp-json/wp/v2/media"
 
         response = requests.post(
             media_url,
             headers=headers,
-            data=image_data,
+            data=image_response.content,
             auth=(wordpress_user, wordpress_password)
         )
         response.raise_for_status()
-        media_id = response.json()['id']
+        
+        media_id = response.json().get('id')
         return media_id
     except Exception as e:
         print("❌ Errore nel caricamento immagine:", e)
@@ -32,11 +35,12 @@ def publish_to_wordpress(title, content, image_url, wordpress_url, wordpress_use
         data = {
             'title': title,
             'content': content,
-            'status': 'publish',
-            'featured_media': media_id if media_id else None
+            'status': 'publish'
         }
 
-        # ✅ Anche qui: corregge lo slash doppio
+        if media_id:
+            data['featured_media'] = media_id
+
         post_url = wordpress_url.rstrip("/") + "/wp-json/wp/v2/posts"
 
         response = requests.post(

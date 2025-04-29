@@ -27,7 +27,7 @@ def workflow():
     print("✅ Tutti gli articoli pubblicati!")
 
 def start_scheduler():
-    schedule.every().day.at("09:00").do(workflow)
+    schedule.every(1).minutes.do(workflow)
 
     print("🟢 Scheduler attivo. In attesa del prossimo ciclo...")
 

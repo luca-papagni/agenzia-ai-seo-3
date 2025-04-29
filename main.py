@@ -1,5 +1,5 @@
-from scheduler import workflow
+from scheduler import start_scheduler
 
-print("✅ Test singolo del workflow...")
-workflow()
-print("✅ Workflow eseguito (anche se fallisce qualcosa).")
+if __name__ == "__main__":
+    print("🟢 Scheduler attivo. In attesa del prossimo ciclo...")
+    start_scheduler()

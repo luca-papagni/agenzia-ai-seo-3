@@ -1,0 +1,14 @@
+[
+  {
+    "site_name": "Sito Fitness",
+    "wordpress_url": "https://sito-fitness.com",
+    "wordpress_user": "user_fitness",
+    "wordpress_password": "password_fitness"
+  },
+  {
+    "site_name": "Sito Immobiliare",
+    "wordpress_url": "https://sito-immobiliare.com",
+    "wordpress_user": "user_immobiliare",
+    "wordpress_password": "password_immobiliare"
+  }
+]

@@ -1,4 +1,4 @@
-openai
-requests
+openai>=1.0.0
 schedule
+requests
 python-dotenv

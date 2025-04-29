@@ -1,7 +1,6 @@
 import requests
-from config import WORDPRESS_URL, WORDPRESS_USER, WORDPRESS_PASSWORD
 
-def upload_image_to_wordpress(image_url):
+def upload_image_to_wordpress(image_url, wordpress_url, wordpress_user, wordpress_password):
     try:
         image_data = requests.get(image_url).content
         filename = "immagine_articolo.jpg"
@@ -9,10 +8,10 @@ def upload_image_to_wordpress(image_url):
             'Content-Disposition': f'attachment; filename={filename}'
         }
         response = requests.post(
-            f"{WORDPRESS_URL}/wp-json/wp/v2/media",
+            f"{wordpress_url}/wp-json/wp/v2/media",
             headers=headers,
             data=image_data,
-            auth=(WORDPRESS_USER, WORDPRESS_PASSWORD)
+            auth=(wordpress_user, wordpress_password)
         )
         response.raise_for_status()
         media_id = response.json()['id']
@@ -21,10 +20,10 @@ def upload_image_to_wordpress(image_url):
         print("❌ Errore nel caricamento immagine:", e)
         return None
 
-def publish_to_wordpress(title, content, image_url):
+def publish_to_wordpress(title, content, image_url, wordpress_url, wordpress_user, wordpress_password):
     try:
-        print("📝 Pubblicazione in corso...")
-        media_id = upload_image_to_wordpress(image_url)
+        print(f"📝 Pubblicazione su: {wordpress_url}")
+        media_id = upload_image_to_wordpress(image_url, wordpress_url, wordpress_user, wordpress_password)
 
         data = {
             'title': title,
@@ -34,13 +33,13 @@ def publish_to_wordpress(title, content, image_url):
         }
 
         response = requests.post(
-            f"{WORDPRESS_URL}/wp-json/wp/v2/posts",
-            auth=(WORDPRESS_USER, WORDPRESS_PASSWORD),
+            f"{wordpress_url}/wp-json/wp/v2/posts",
+            auth=(wordpress_user, wordpress_password),
             json=data
         )
 
         response.raise_for_status()
         post_id = response.json()['id']
-        print(f"✅ Articolo pubblicato! ID: {post_id}")
+        print(f"✅ Articolo pubblicato su {wordpress_url}! ID: {post_id}")
     except Exception as e:
         print("❌ Errore nella pubblicazione su WordPress:", e)

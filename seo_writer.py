@@ -1,30 +1,21 @@
-import openai
-from config import OPENAI_API_KEY
+from openai import OpenAI
+import os
 
-openai.api_key = OPENAI_API_KEY
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
 
 def generate_article(topic):
-    prompt = f"""
-Scrivi un articolo SEO completo e originale sul tema: {topic}.
-L'articolo deve essere in italiano, avere almeno 1000 caratteri, e includere:
-- Un titolo H1
-- Un'introduzione coinvolgente
-- Almeno 2 sottotitoli H2 con paragrafi coerenti
-- Uno stile chiaro, informativo e professionale
-
-Non includere frasi tipo "Ecco a te", "In questo articolo ti mostrerò" o cose troppo generiche.
-"""
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4o",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            max_tokens=1000
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Sei un esperto SEO che scrive articoli ottimizzati."},
+                {"role": "user", "content": f"Scrivi un articolo SEO di almeno 1000 caratteri sul tema: {topic}."}
+            ]
         )
-
-        articolo = response["choices"][0]["message"]["content"]
-        return articolo
-
+        article = response.choices[0].message.content
+        return article
     except Exception as e:
         print("❌ Errore nella generazione dell'articolo:", e)
-        return f"Errore nella generazione dell'articolo su: {topic}"
+        return None

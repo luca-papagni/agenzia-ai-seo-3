@@ -7,8 +7,12 @@ def upload_image_to_wordpress(image_url, wordpress_url, wordpress_user, wordpres
         headers = {
             'Content-Disposition': f'attachment; filename={filename}'
         }
+
+        # ✅ Rimuove eventuale slash finale da wordpress_url
+        media_url = wordpress_url.rstrip("/") + "/wp-json/wp/v2/media"
+
         response = requests.post(
-            f"{wordpress_url}/wp-json/wp/v2/media",
+            media_url,
             headers=headers,
             data=image_data,
             auth=(wordpress_user, wordpress_password)
@@ -32,8 +36,11 @@ def publish_to_wordpress(title, content, image_url, wordpress_url, wordpress_use
             'featured_media': media_id if media_id else None
         }
 
+        # ✅ Anche qui: corregge lo slash doppio
+        post_url = wordpress_url.rstrip("/") + "/wp-json/wp/v2/posts"
+
         response = requests.post(
-            f"{wordpress_url}/wp-json/wp/v2/posts",
+            post_url,
             auth=(wordpress_user, wordpress_password),
             json=data
         )

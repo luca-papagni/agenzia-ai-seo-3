@@ -1,14 +1,8 @@
 [
   {
-    "site_name": "Sito Fitness",
-    "wordpress_url": "https://sito-fitness.com",
-    "wordpress_user": "user_fitness",
-    "wordpress_password": "password_fitness"
+    "site_name": "Bloveom",
+    "wordpress_url": "https://bloveom.com/",
+    "wordpress_user": "bloveom.com",
+    "wordpress_password": "NXk5 OIPk Frjz 6PQX jsft WKQJ"
   },
-  {
-    "site_name": "Sito Immobiliare",
-    "wordpress_url": "https://sito-immobiliare.com",
-    "wordpress_user": "user_immobiliare",
-    "wordpress_password": "password_immobiliare"
-  }
 ]

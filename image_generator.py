@@ -1,19 +1,20 @@
-import openai
-from config import OPENAI_API_KEY
+from openai import OpenAI
+import os
 
-openai.api_key = OPENAI_API_KEY
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
 
 def generate_image(prompt):
     try:
-        response = openai.Image.create(
-            prompt=prompt,
-            model="dall-e-3",
+        response = client.images.generate(
+            model="dall-e-2",
+            prompt=f"Immagine in stile SEO sul tema: {prompt}",
             n=1,
             size="1024x1024"
         )
-        image_url = response['data'][0]['url']
+        image_url = response.data[0].url
         return image_url
-
     except Exception as e:
         print("❌ Errore nella generazione immagine:", e)
-        return "https://via.placeholder.com/1024"  # immagine di fallback
+        return None

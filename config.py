@@ -1,9 +1,14 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()  # Serve solo in locale, su Render viene ignorato
+load_dotenv()  # utile in locale, su Render non fa danni
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-WORDPRESS_URL = os.getenv("WORDPRESS_URL")
-WORDPRESS_USER = os.getenv("WORDPRESS_USER")
-WORDPRESS_PASSWORD = os.getenv("WORDPRESS_PASSWORD")
+
+# mapping  “alias_sito”  ->  { user, password }
+# le credenziali arrivano da variabili d’ambiente prefissate
+def wp_credentials(site_alias: str) -> dict:
+    return {
+        "user":     os.getenv(f"WP_{site_alias.upper()}_USER"),
+        "password": os.getenv(f"WP_{site_alias.upper()}_PWD")
+    }

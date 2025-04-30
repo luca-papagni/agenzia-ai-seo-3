@@ -1,4 +1,4 @@
-openai>=1.0.0
-schedule
-requests
-python-dotenv
+openai>=1.0.0,<2.0.0
+schedule==1.2.2
+requests==2.32.3
+python-dotenv==1.1.0

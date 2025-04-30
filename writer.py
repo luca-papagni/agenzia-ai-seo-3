@@ -1,22 +1,19 @@
 from openai import OpenAI
-import os
+from config import OPENAI_API_KEY
 
-# Inizializza il client OpenAI
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI(api_key=OPENAI_API_KEY)
 
-def generate_article(topic):
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "Sei un esperto di scrittura SEO. Scrivi un articolo dettagliato, chiaro e coinvolgente."},
-                {"role": "user", "content": f"Scrivi un articolo SEO di almeno 1000 caratteri sul tema: {topic}"}
-            ],
-            temperature=0.7,
-            max_tokens=800  # ~1000 caratteri
-        )
-        article = response.choices[0].message.content
-        return article
-    except Exception as e:
-        print(f"❌ Errore nella generazione dell'articolo: {e}")
-        return ""
+def generate_article(topic: str) -> str:
+    rsp = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system",
+             "content": "Sei un copywriter SEO professionista."},
+            {"role": "user",
+             "content": f"Scrivi un articolo di almeno 1 000 caratteri, "
+                        f"ben formattato (H1, H2, paragrafi), sul tema: {topic}"}
+        ],
+        temperature=0.7,
+        max_tokens=900
+    )
+    return rsp.choices[0].message.content

@@ -27,7 +27,7 @@ def workflow():
     print("✅ Fine ciclo\n")
 
 def start_scheduler():
-    schedule.every().day.at("09:00").do(workflow)   # cambia se vuoi test
+    schedule.every(1).minutes.do(workflow)   # cambia se vuoi test
     while True:
         schedule.run_pending()
         time.sleep(30)

@@ -1,36 +1,33 @@
-import schedule
-import time
-from seo_writer import generate_article
-from image_generator import generate_image
-from wordpress_publisher import publish_to_wordpress
-from site_manager import load_sites
+import schedule, time, datetime
+from site_manager import all_sites
+from writer import generate_article
+from image_gen import generate_image
+from wp_publisher import publish_post
+from config import wp_credentials
 
 def workflow():
-    print("⏱ Avvio generazione articoli per tutti i siti...")
+    print("⏱", datetime.datetime.now(), "Ciclo avviato")
+    for site in all_sites():
+        topic = site["topic"]
+        wp_url = site["wordpress_url"]
+        creds = wp_credentials(site["alias"])
+        if not creds["user"] or not creds["password"]:
+            print(f"❌ Credenziali mancanti per {site['alias']}")
+            continue
 
-    sites = load_sites()
-
-    for site in sites:
-        topic = "Tendenze SEO 2025"  # In futuro dinamico
         article = generate_article(topic)
-        image_url = generate_image(topic)
-
-        publish_to_wordpress(
-            title=f"Nuovo articolo: {topic}",
+        img_url = generate_image(topic)
+        publish_post(
+            wp_url=wp_url,
+            creds=creds,
+            title=f"{topic} – {datetime.date.today()}",
             content=article,
-            image_url=image_url,
-            wordpress_url=site['wordpress_url'],
-            wordpress_user=site['wordpress_user'],
-            wordpress_password=site['wordpress_password']
+            image_url=img_url
         )
-
-    print("✅ Tutti gli articoli pubblicati!")
+    print("✅ Fine ciclo\n")
 
 def start_scheduler():
-    schedule.every().day.at("15:20").do(workflow)
-
-    print("🟢 Scheduler attivo. In attesa del prossimo ciclo...")
-
+    schedule.every().day.at("09:00").do(workflow)   # cambia se vuoi test
     while True:
         schedule.run_pending()
-        time.sleep(60)
+        time.sleep(30)
